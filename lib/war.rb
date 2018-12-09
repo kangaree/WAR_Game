@@ -1,4 +1,5 @@
 require_relative "deck"
+require_relative "player"
 require "byebug"
 
 class War
@@ -9,16 +10,15 @@ class War
     def initialize
         shuffled_deck = Deck.all_cards.shuffle
 
-        # change to 26. Currently just takes 5
-
+        # Change to 26! Currently just takes 5
         @p1_deck_half = Deck.new(shuffled_deck.shift(5))
         @p2_deck_half = Deck.new(shuffled_deck.shift(5))
         @reward_pile = []
     end
 
     def round
-        puts "#{p1_deck_half.peek} vs. #{p2_deck_half.peek}"
-        sleep(1)  
+        puts "#{p1_deck_half.peek}vs. #{p2_deck_half.peek}"
+        sleep(0.5)  
         case p1_deck_half.peek.war_value <=> p2_deck_half.peek.war_value
         when -1
 
@@ -32,6 +32,7 @@ class War
             self.reward_pile = []    
         when 0
             puts "WAR!!!"
+            sleep(0.5)
 
             if p1_deck_half.count <= 2
                 puts "Player 2 wins inside war"
@@ -64,13 +65,13 @@ class War
     end
 
     def play
-        puts "Welcome!"
-        puts "P1: #{p1_deck_half.inspect}"
-        puts "P2: #{p2_deck_half.inspect}"
+        puts "This is war!"
+        puts "P1: #{p1_deck_half}"
+        puts "P2: #{p2_deck_half}"
         
         until p1_deck_half.empty? || p2_deck_half.empty?
             round
-            sleep(1)
+            sleep(0.5)
         end
         
         if p1_deck_half.empty?
