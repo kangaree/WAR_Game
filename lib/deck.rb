@@ -34,20 +34,8 @@ class Deck
     @cards.concat(cards)
   end
 
-  def inspect
-    @cards.join
-  end
-
-  def to_s
-    @cards.join
-  end
-
   def empty?
     @cards.empty?
-  end
-
-  def peek
-    @cards.first
   end
 
 end

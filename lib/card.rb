@@ -76,10 +76,10 @@ class Card
   end
 
   def to_s
-    VALUE_STRINGS[value] + SUIT_STRINGS[suit] + " "
+    VALUE_STRINGS[value] + SUIT_STRINGS[suit]
   end
 
   def inspect
-    VALUE_STRINGS[value] + SUIT_STRINGS[suit] + " "
+    VALUE_STRINGS[value] + SUIT_STRINGS[suit]
   end
 end
