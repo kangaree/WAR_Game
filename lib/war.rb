@@ -1,5 +1,6 @@
 require_relative "deck"
 require_relative "player"
+require "colorize"
 
 class War
 
@@ -44,14 +45,16 @@ class War
         case p1_card.war_power <=> p2_card.war_power
         when -1
             puts "#{@p2.name}'s #{p2_card} wins #{@reward_pile}!"
-            @p2.hand.concat(@reward_pile)
+            @p2.hand.concat(@reward_pile.reverse)
             render
             @reward_pile = []    
         when 0
             puts "WAR!!!"
             sleep(0.5)
-            @reward_pile.concat(@p1.hand.shift(1))
-            @reward_pile.concat(@p2.hand.shift(1))
+            @reward_pile << @p1.hand.shift
+            @reward_pile << @p2.hand.shift
+            puts "The stakes are now: #{reward_pile}"
+            sleep(0.5)
             if @p1.hand.empty? || @p2.hand.empty?
                 return
             end
@@ -83,7 +86,9 @@ class War
     end
 
     def render
-        puts "#{@p1.name} #{@p1.hand.reverse} vs. #{@p2.hand} #{@p2.name}"        
+        print "#{@p1.name} #{@p1.hand.reverse[0...-1]} " + "#{@p1.hand.first}" + " vs. " + "#{@p2.hand.first} #{@p2.hand[1..-1]} #{@p2.name}" 
+        
+        puts      
     end
 
     private
