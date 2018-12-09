@@ -25,7 +25,7 @@ class Card
     :ace   => "A"
   }
 
-  WAR_VALUE = {
+  WAR_POWER = {
     :deuce => 2,
     :three => 3,
     :four  => 4,
@@ -51,8 +51,8 @@ class Card
     VALUE_STRINGS.keys
   end
 
-  def war_value
-    WAR_VALUE[value]
+  def war_power
+    WAR_POWER[value]
   end
 
   attr_reader :suit, :value

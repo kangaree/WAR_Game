@@ -36,56 +36,38 @@ class War
 
     def round
 
-        return if @p1.hand.count == 0 || @p2.hand.count == 0
+        p1_card = @p1.hand.shift
+        p2_card = @p2.hand.shift
+
+        @reward_pile.push(p1_card).push(p2_card)
         
-        puts "#{@p1.hand.first} vs. #{@p2.hand.first}"
-        sleep(0.5)
-
-
-        p1_card = @p1.hand.first.dup
-        p2_card = @p2.hand.first.dup
-
-        @reward_pile.concat(@p1.hand.shift(1)).concat(@p2.hand.shift(1))
-        
-        case p1_card.war_value <=> p2_card.war_value
+        case p1_card.war_power <=> p2_card.war_power
         when -1
-            puts "#{@p2.name}'s #{p2.hand.first} wins #{@reward_pile}!"
-
+            puts "#{@p2.name}'s #{p2_card} wins #{@reward_pile}!"
             @p2.hand.concat(@reward_pile)
-
-            puts "#{@p1.name} has: #{@p1.hand}"
-            puts "#{@p2.name} has: #{@p2.hand}"
-
+            render
             @reward_pile = []    
         when 0
             puts "WAR!!!"
             sleep(0.5)
-
-            if @p1.hand.count == 1 || @p2.hand.count == 1
-                @p1.hand.concat(@reward_pile).concat(@p2.hand.shift) if @p2.hand.count <= 2
-                @p2.hand.concat(@reward_pile).concat(@p1.hand.shift) if @p1.hand.count <= 2
-                @reward_pile = [] 
-            else
-                @reward_pile.concat(@p1.hand.shift(1))
-                @reward_pile.concat(@p2.hand.shift(1))
+            @reward_pile.concat(@p1.hand.shift(1))
+            @reward_pile.concat(@p2.hand.shift(1))
+            if @p1.hand.empty? || @p2.hand.empty?
+                return
             end
-            
+            render
             round
         when 1
-            puts "#{@p1.name}'s #{@p1.hand.first} wins #{@reward_pile}!"
-            
+            puts "#{@p1.name}'s #{p1_card} wins #{@reward_pile}!"
             @p1.hand.concat(@reward_pile)
-
-            puts "#{@p1.name} has: #{@p1.hand}"
-            puts "#{@p2.name} has: #{@p2.hand}"
-            
+            render
             @reward_pile = []
-        end          
+        end
+        
     end
 
     def play
-        puts "#{@p1.name} has: #{@p1.hand}"
-        puts "#{@p2.name} has: #{@p2.hand}"
+        render
         
         until @p1.hand.empty? || @p2.hand.empty?
             round
@@ -97,7 +79,11 @@ class War
         else
             puts "#{@p1.name} won the whole bloody affair!"
         end
-        
+
+    end
+
+    def render
+        puts "#{@p1.name} #{@p1.hand.reverse} vs. #{@p2.hand} #{@p2.name}"        
     end
 
     private
@@ -109,8 +95,10 @@ class War
 ..../""""""""""""\======░ ▒▓▓█D 
 /"""""""""""""""""""""""'\| 
 \_@_@_@_@_@_/
-War... War never changes.
-' 
+War... '
+        sleep(0.5)
+        puts "War never changes."
+        sleep(0.5)
     end
 
 end
