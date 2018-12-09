@@ -11,7 +11,3 @@ class Player
     self.hand = nil
   end
 end
-
-# p1 = Player.new("Gary")
-# p1.hand = ["test","testing","testing2"]
-# p p1.hand => ["test", "testing", "testing2"]

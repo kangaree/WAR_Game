@@ -8,21 +8,26 @@ class War
 
     def initialize
         shuffled_deck = Deck.all_cards.shuffle
-        @p1_deck_half = Deck.new(shuffled_deck.take(26))
-        @p2_deck_half = Deck.new(shuffled_deck.drop(26))
+
+        # change to 26. Currently just takes 5
+
+        @p1_deck_half = Deck.new(shuffled_deck.shift(5))
+        @p2_deck_half = Deck.new(shuffled_deck.shift(5))
         @reward_pile = []
     end
 
     def round
-        puts "#{p1_deck_half.peek}vs.#{p2_deck_half.peek}"  
+        puts "#{p1_deck_half.peek} vs. #{p2_deck_half.peek}"
+        sleep(1)  
         case p1_deck_half.peek.war_value <=> p2_deck_half.peek.war_value
         when -1
 
             puts "P2's #{p2_deck_half.peek} wins this round!"
-            puts "P1: #{}"
-            puts "P2: #{}"
-            puts
+
             p2_deck_half.return(p1_deck_half.take(1) + p2_deck_half.take(1) + self.reward_pile)
+
+            puts "P1 is now: #{p1_deck_half.inspect}"
+            puts "P2 is now: #{p2_deck_half.inspect}"
 
             self.reward_pile = []    
         when 0
@@ -47,15 +52,25 @@ class War
 
         when 1
             puts "P1's #{p1_deck_half.peek} wins this round!"
-            puts
+            puts "P1: #{p1_deck_half.inspect}"
+            puts "P2: #{p2_deck_half.inspect}"
             p1_deck_half.return(p1_deck_half.take(1) + p2_deck_half.take(1) + self.reward_pile)
+            
+            puts "P1 is now: #{p1_deck_half.inspect}"
+            puts "P2 is now: #{p2_deck_half.inspect}"
+            
             self.reward_pile = []
         end          
     end
 
     def play
+        puts "Welcome!"
+        puts "P1: #{p1_deck_half.inspect}"
+        puts "P2: #{p2_deck_half.inspect}"
+        
         until p1_deck_half.empty? || p2_deck_half.empty?
             round
+            sleep(1)
         end
         
         if p1_deck_half.empty?
