@@ -34,7 +34,7 @@ class Deck
   end
 
   def empty?
-    @cards.count == 0
+    @cards.empty?
   end
 
 end
