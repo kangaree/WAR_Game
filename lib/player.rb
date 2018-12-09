@@ -6,8 +6,4 @@ class Player
     @name = name
   end
 
-  def return_cards(deck)
-    hand.return_cards(deck)
-    self.hand = nil
-  end
 end

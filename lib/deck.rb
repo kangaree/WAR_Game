@@ -1,4 +1,3 @@
-require "byebug"
 require_relative 'card'
 
 # Represents a deck of playing cards.
@@ -30,12 +29,12 @@ class Deck
   end
 
   # Returns an array of cards to the bottom of the deck.
-  def return(cards) #renamed it new_cards in case it throws an error?
+  def return(cards)
     @cards.concat(cards)
   end
 
   def empty?
-    @cards.empty?
+    @cards.count == 0
   end
 
 end

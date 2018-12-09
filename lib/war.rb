@@ -1,6 +1,5 @@
 require_relative "deck"
 require_relative "player"
-require "byebug"
 
 class War
 
@@ -14,33 +13,40 @@ class War
     end
 
     def setup
-        # Delete the take of 10 at the end!
         shuffled_deck = Deck.all_cards.shuffle
+
         p1_cards = []
         p2_cards = []
 
         shuffled_deck.count.times do |i|
-            i.even? ? p1_cards.concat(shuffled_deck.shift(1)) : p2_cards.concat(shuffled_deck.shift(1))
+            if i.even?
+                # p1_cards.concat(shuffled_deck.shift(1))
+                p1_cards << shuffled_deck.shift
+            else
+                # p2_cards.concat(shuffled_deck.shift(1))
+                p2_cards << shuffled_deck.shift
+            end
         end
 
-        @p1 = Player.new("Gary")
+        @p1 = Player.new("Muhammed")
         @p1.hand = p1_cards
-        @p2 = Player.new("George")
+        @p2 = Player.new("Hines")
         @p2.hand = p2_cards
     end
 
     def round
-        puts "#{@p1.hand.first}vs. #{@p2.hand.first}"
+        puts "#{@p1.hand.first} vs. #{@p2.hand.first}"
         sleep(0.5)  
         
-        case p1.hand.first.war_value <=> p2.hand.first.war_value
+        case @p1.hand.first.war_value <=> @p2.hand.first.war_value
         when -1
-            puts "P2's #{p2.hand.first} wins this round!"
+            puts "#{@p2.name}'s #{p2.hand.first} wins this round!"
+            @reward_pile.concat([@p1.hand.shift,@p2.hand.shift])
 
-            @p2.hand.concat([@p2.hand.shift, @p1.hand.shift]).concat(@reward_pile)
+            @p2.hand.concat(@reward_pile)
 
-            puts "P1 is now: #{@p2.hand}"
-            puts "P2 is now: #{@p1.hand}"
+            puts "#{@p1.name} has: #{@p1.hand}"
+            puts "#{@p2.name} has: #{@p2.hand}"
 
             @reward_pile = []    
         when 0
@@ -64,15 +70,14 @@ class War
             
             round
         when 1
-            puts "P1's #{@p1.hand.first} wins this round!"
+            puts "#{@p1.name}'s #{@p1.hand.first} wins this round!"
 
-            puts "P1: #{@p2.hand}"
-            puts "P2: #{@p1.hand}"
+            puts "#{@p1.name}: #{@p1.hand}"
+            puts "#{@p2.name} #{@p2.hand}"
             
-            @p1.hand.concat([@p2.hand.shift, @p1.hand.shift]).concat(@reward_pile)
+            @reward_pile.concat([@p1.hand.shift,@p2.hand.shift])
+            @p1.hand.concat(@reward_pile)
             
-            puts "P1 is now: #{@p2.hand}"
-            puts "P2 is now: #{@p1.hand}"
             
             @reward_pile = []
         end          
@@ -80,13 +85,16 @@ class War
 
     def play
         puts "This is war!"
-        puts "P1: #{@p1.hand}"
-        puts "P2: #{@p2.hand}"
+        puts "#{@p1.name}: #{@p1.hand}"
+        puts "#{@p2.name}: #{@p2.hand}"
         
         until @p2.hand.empty? || @p1.hand.empty?
             round
             sleep(0.5)
         end
+        
+        puts "#{@p1.name} has: #{@p2.hand}"
+        puts "#{@p2.name} has: #{@p1.hand}"
         
         if @p2.hand.empty?
             puts "P2 won the whole game!"
