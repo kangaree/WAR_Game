@@ -57,11 +57,11 @@ class War
             @reward_pile = []    
         when 0
             puts "WAR!!!"
-            gets unless @auto
+            gets.chomp unless @auto
             @reward_pile << @p1.hand.shift
             @reward_pile << @p2.hand.shift
             puts "The stakes are now: #{reward_pile}"
-            gets unless @auto
+            gets.chomp unless @auto
             if @p1.hand.empty? || @p2.hand.empty?
                 return
             end
@@ -84,7 +84,7 @@ class War
         
         until @p1.hand.empty? || @p2.hand.empty?
             round
-            gets unless @auto
+            gets.chomp unless @auto
         end
         
         if @p1.hand.empty?
