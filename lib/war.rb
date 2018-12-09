@@ -17,6 +17,10 @@ class War
         print "How many cards? (max 52, divisible by 2):"
         count = gets.chomp.to_i
 
+        print "Auto? (y/n):"
+        yn = gets.chomp.downcase
+        @auto = yn == "n" ? false : true
+        
         shuffled_deck = Deck.all_cards.shuffle.take(count)
 
         p1_cards = []
@@ -44,24 +48,30 @@ class War
         
         case p1_card.war_power <=> p2_card.war_power
         when -1
-            puts "#{@p2.name}'s #{p2_card} wins #{@reward_pile}!"
+            puts "#{@p2.name}'s " + "#{p2_card}".green + " wins #{@reward_pile.reverse}!"
+            if @p1.hand.empty?
+                return
+            end
             @p2.hand.concat(@reward_pile.reverse)
             render
             @reward_pile = []    
         when 0
             puts "WAR!!!"
-            sleep(0.5)
+            gets unless @auto
             @reward_pile << @p1.hand.shift
             @reward_pile << @p2.hand.shift
             puts "The stakes are now: #{reward_pile}"
-            sleep(0.5)
+            gets unless @auto
             if @p1.hand.empty? || @p2.hand.empty?
                 return
             end
             render
             round
         when 1
-            puts "#{@p1.name}'s #{p1_card} wins #{@reward_pile}!"
+            puts "#{@p1.name}'s " + "#{p1_card}".green+ " wins #{@reward_pile}!"
+            if @p2.hand.empty?
+                return
+            end
             @p1.hand.concat(@reward_pile)
             render
             @reward_pile = []
@@ -74,7 +84,7 @@ class War
         
         until @p1.hand.empty? || @p2.hand.empty?
             round
-            sleep(0.5)
+            gets unless @auto
         end
         
         if @p1.hand.empty?
@@ -86,8 +96,15 @@ class War
     end
 
     def render
-        print "#{@p1.name} #{@p1.hand.reverse[0...-1]} " + "#{@p1.hand.first}" + " vs. " + "#{@p2.hand.first} #{@p2.hand[1..-1]} #{@p2.name}" 
-        
+
+        case p1.hand.first.war_power <=> p2.hand.first.war_power
+        when -1
+            print "#{@p1.name} #{@p1.hand.reverse[0...-1]} " + "#{@p1.hand.first}".red + " vs. " + "#{@p2.hand.first}".green + "#{@p2.hand[1..-1]} #{@p2.name}" 
+        when 0
+            print "#{@p1.name} #{@p1.hand.reverse[0...-1]} " + "#{@p1.hand.first}".red + " vs. " + "#{@p2.hand.first}".red + "#{@p2.hand[1..-1]} #{@p2.name}" 
+        when 1
+            print "#{@p1.name} #{@p1.hand.reverse[0...-1]} " + "#{@p1.hand.first}".green + " vs. " + "#{@p2.hand.first}".red + "#{@p2.hand[1..-1]} #{@p2.name}" 
+        end
         puts      
     end
 
@@ -111,3 +128,22 @@ end
 if $PROGRAM_NAME == __FILE__
   War.new.play
 end
+
+# Sample Output
+# Alien [7♥, 10♦, A♣, 7♦] 5♥ vs. 6♥[5♠, A♥, K♠, Q♠] Predator
+# Predator's 6♥ wins [6♥, 5♥]!
+# Alien [7♥, 10♦, A♣] 7♦ vs. 5♠[A♥, K♠, Q♠, 6♥, 5♥] Predator
+# Alien's 7♦ wins [7♦, 5♠]!
+# Alien [5♠, 7♦, 7♥, 10♦] A♣ vs. A♥[K♠, Q♠, 6♥, 5♥] Predator
+# WAR!!!
+# The stakes are now: [A♣, A♥, 10♦, K♠]
+# Alien [5♠, 7♦] 7♥ vs. Q♠[6♥, 5♥] Predator
+# Predator's Q♠ wins [Q♠, 7♥, K♠, 10♦, A♥, A♣]!
+# Alien [5♠] 7♦ vs. 6♥[5♥, Q♠, 7♥, K♠, 10♦, A♥, A♣] Predator
+# Alien's 7♦ wins [7♦, 6♥]!
+# Alien [6♥, 7♦] 5♠ vs. 5♥[Q♠, 7♥, K♠, 10♦, A♥, A♣] Predator
+# WAR!!!
+# The stakes are now: [5♠, 5♥, 7♦, Q♠]
+# Alien [] 6♥ vs. 7♥[K♠, 10♦, A♥, A♣] Predator
+# Predator's 7♥ wins [7♥, 6♥, Q♠, 7♦, 5♥, 5♠]!
+# Predator won the whole bloody affair!
